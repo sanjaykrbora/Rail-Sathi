@@ -1,5 +1,5 @@
 import pandas as pd
-from utils.database_helper import fetch_table
+from utils.database_helper import fetch_table, get_connection
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -60,6 +60,12 @@ TRAINING_DATA = {
     "pending_maintenance": [
         "pending maintenance", "maintenance tasks", 
         "maintenance logged", "pending repairs", "how many pending maintenance tasks are there", "show maintenance"
+    ],
+    "add_employee": [
+        "add employee", "add a new employee", "insert employee", "create employee", "add staff"
+    ],
+    "add_coach": [
+        "add coach", "add a new coach", "insert coach", "create coach", "add train"
     ]
 }
 
@@ -97,6 +103,21 @@ def extract_shop_name(question, shops_df):
         if shop_name.lower() in question.lower():
             return shop_name
     return None
+
+def generate_next_employee_id():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT employee_id FROM employees ORDER BY employee_id DESC LIMIT 1")
+    result = cursor.fetchone()
+    conn.close()
+    
+    if result and result[0].startswith("EMP"):
+        try:
+            current_num = int(result[0][3:])
+            return f"EMP{current_num + 1:03d}"
+        except ValueError:
+            pass
+    return "EMP001"
 
 def ai_response(question):
     try:
@@ -191,8 +212,57 @@ def ai_response(question):
             pending = maintenance[maintenance['status'] == 'Pending']
             return f"🔧 We currently have **{len(pending)} pending maintenance tasks** logged in the system."
             
+        elif intent == "add_employee":
+            # Regex to match: add employee: Name, Designation, Shop
+            match = re.search(r"add employee:\s*([^,]+),\s*([^,]+),\s*(.+)", question, re.IGNORECASE)
+            if match:
+                emp_name = match.group(1).strip().title()
+                designation = match.group(2).strip().title()
+                shop_name = match.group(3).strip().title()
+                
+                # Check if shop exists
+                if shop_name.lower() not in shops['shop_name'].str.lower().values:
+                    return f"❌ **Error:** Shop '{shop_name}' does not exist in the database. Please check spelling."
+                
+                new_id = generate_next_employee_id()
+                conn = get_connection()
+                cursor = conn.cursor()
+                cursor.execute(
+                    "INSERT INTO employees (employee_id, employee_name, designation, shop_name, status) VALUES (?, ?, ?, ?, ?)",
+                    (new_id, emp_name, designation, shop_name, "Active")
+                )
+                conn.commit()
+                conn.close()
+                return f"✅ **Success!** Automatically assigned ID **{new_id}**.\n\nAdded **{emp_name}** as a **{designation}** in the **{shop_name}**."
+            else:
+                return "✍️ **To add an employee**, please use this exact format:\n`add employee: Name, Designation, Shop`\n*(Example: add employee: Amit Sharma, Technician, Wheel Shop)*"
+                
+        elif intent == "add_coach":
+            # Regex to match: add coach: Coach_Number, Type, Shop
+            match = re.search(r"add coach:\s*([^,]+),\s*([^,]+),\s*(.+)", question, re.IGNORECASE)
+            if match:
+                coach_number = match.group(1).strip().upper()
+                coach_type = match.group(2).strip().title()
+                shop_name = match.group(3).strip().title()
+                
+                # Check if shop exists
+                if shop_name.lower() not in shops['shop_name'].str.lower().values:
+                    return f"❌ **Error:** Shop '{shop_name}' does not exist in the database."
+                
+                conn = get_connection()
+                cursor = conn.cursor()
+                cursor.execute(
+                    "INSERT INTO coaches (coach_number, coach_type, current_shop, status) VALUES (?, ?, ?, ?)",
+                    (coach_number, coach_type, shop_name, "In Progress")
+                )
+                conn.commit()
+                conn.close()
+                return f"✅ **Success!** Added Coach **{coach_number}** ({coach_type}) currently stationed at **{shop_name}**."
+            else:
+                return "✍️ **To add a coach**, please use this exact format:\n`add coach: Coach Number, Type, Shop`\n*(Example: add coach: NF12345, Sleeper, Wheel Shop)*"
+            
         else:
-            return "🤖 **I didn't quite catch that.** \n\nI am the Rail Sathi Custom Local AI. You can ask me basic questions like **'show employees'**, **'what are your features'**, or **'critical machines'**!"
+            return "🤖 **I didn't quite catch that.** \n\nI am the Rail Sathi Custom Local AI. You can ask me basic questions like **'show employees'**, **'what are your features'**, or **'add employee'**!"
 
     except Exception as error:
         return f"❌ Custom AI Engine Error: {error}"
