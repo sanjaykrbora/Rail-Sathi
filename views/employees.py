@@ -35,6 +35,11 @@ def app():
         "SELECT * FROM employees",
         connection
     )
+    
+    workshop = pd.read_sql_query(
+        "SELECT * FROM workshop_info",
+        connection
+    ).iloc[0]
 
     st.title("👷 Employee Management")
 
@@ -134,7 +139,7 @@ def app():
 
     st.divider()
 
-    total_employees = len(filtered_data)
+    total_employees = int(workshop["total_employees"])
 
     active_employees = len(
         filtered_data[
@@ -372,7 +377,7 @@ def app():
 
     summary_col1.metric(
         "Total Employees",
-        len(filtered_data)
+        int(workshop["total_employees"])
     )
 
     summary_col2.metric(

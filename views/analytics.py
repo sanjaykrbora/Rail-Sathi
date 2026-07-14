@@ -75,7 +75,7 @@ def app():
     st.divider()
 
     total_coaches = len(coaches)
-    total_employees = len(employees)
+    total_employees = int(workshop["total_employees"])
     total_machines = len(machines)
     total_shops = len(shops)
 
