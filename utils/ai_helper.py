@@ -135,14 +135,16 @@ def ai_response(question):
             return f"🏭 We have exactly **{len(shops)} distinct shops** operating within the workshop."
             
         elif intent == "list_shops":
-            shop_list = ", ".join(shops['shop_name'].tolist())
+            shop_list_str = [f"{row['shop_name']} (Head: {row['head_of_shop']})" for _, row in shops.iterrows()]
+            shop_list = ", ".join(shop_list_str)
             return f"🏭 **Here are all our shops:**\n{shop_list}"
             
         elif intent == "count_machines":
             return f"⚙️ There are **{len(machines)} machines** registered and monitored in our database."
 
         elif intent == "list_machines":
-            names = ", ".join(machines['machine_name'].tolist()[:15])
+            mach_list = [f"{row['machine_name']} ({row['machine_id']})" for _, row in machines.head(15).iterrows()]
+            names = ", ".join(mach_list)
             return f"⚙️ **Here is a sample of {min(15, len(machines))} machines in the database:**\n{names}...\n\n(There are {len(machines)} in total)"
 
         elif intent == "count_employees":
@@ -165,18 +167,24 @@ def ai_response(question):
             return f"🚂 We have a total of **{len(coaches)} coaches** registered in the database."
             
         elif intent == "list_coaches":
-            ids = ", ".join(coaches['coach_id'].astype(str).tolist()[:15])
+            coach_list = [f"{row['coach_number']} ({row['coach_type']})" for _, row in coaches.head(15).iterrows()]
+            ids = ", ".join(coach_list)
             return f"🚂 **Here is a sample of {min(15, len(coaches))} coaches:**\n{ids}...\n\n(There are {len(coaches)} total coaches)"
             
         elif intent == "poh_coaches":
             poh_coaches = coaches[coaches['status'].str.contains('POH', case=False, na=False)]
-            return f"👋 **Hello!** Based on the current workshop records, there are exactly **{len(poh_coaches)} coaches** undergoing POH (Periodic Overhaul) right now."
+            if len(poh_coaches) == 0:
+                return "👋 **Hello!** Based on the current workshop records, there are exactly **0 coaches** undergoing POH right now."
+            coach_list = [f"{row['coach_number']} ({row['coach_type']})" for _, row in poh_coaches.head(15).iterrows()]
+            names = ", ".join(coach_list)
+            return f"👋 **Hello!** Based on the current workshop records, there are exactly **{len(poh_coaches)} coaches** undergoing POH (Periodic Overhaul) right now. \n\nSome of them are: {names}"
             
         elif intent == "critical_machines":
             critical_machines = machines[machines['status'].str.contains('Critical', case=False, na=False)]
             if len(critical_machines) == 0:
                 return "🎉 **Good news!** I just checked the database and there are currently *no machines* in critical status."
-            names = ", ".join(critical_machines['machine_name'].tolist())
+            mach_list = [f"{row['machine_name']} ({row['machine_id']})" for _, row in critical_machines.iterrows()]
+            names = ", ".join(mach_list)
             return f"⚠️ **Attention needed:** I found **{len(critical_machines)} critical machines** requiring immediate repair. \n\nThese machines are: {names}."
                 
         elif intent == "pending_maintenance":
