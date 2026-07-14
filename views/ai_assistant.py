@@ -92,10 +92,21 @@ def app():
     st.divider()
     
     st.markdown("### 💬 Ask Rail Sathi AI")
-    st.info("**Example Questions:**\n- *How many coaches are currently undergoing POH?*\n- *Which employees work in the Wheel Shop?*\n- *Give me a summary of critical machine status.*")
+    st.write("Click a question below to ask instantly, or type your own:")
 
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
+        
+    query = None
+    
+    # Interactive question buttons
+    q1, q2, q3 = st.columns(3)
+    if q1.button("How many coaches are currently undergoing POH?", use_container_width=True):
+        query = "How many coaches are currently undergoing POH?"
+    if q2.button("Which employees work in the Wheel Shop?", use_container_width=True):
+        query = "Which employees work in the Wheel Shop?"
+    if q3.button("Give me a summary of critical machine status.", use_container_width=True):
+        query = "Give me a summary of critical machine status."
 
     # Display chat history
     for sender, message in st.session_state.chat_history:
@@ -103,7 +114,9 @@ def app():
         with st.chat_message(role):
             st.markdown(message)
 
-    query = st.chat_input("Ask Rail Sathi AI about the workshop...")
+    chat_input_val = st.chat_input("Ask Rail Sathi AI about the workshop...")
+    if chat_input_val:
+        query = chat_input_val
 
     if query:
         # Display user message

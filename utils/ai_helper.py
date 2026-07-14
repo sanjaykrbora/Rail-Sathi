@@ -19,7 +19,7 @@ def ai_response(question):
         # Intent: Coaches in POH
         if "coaches" in question and "poh" in question:
             poh_coaches = coaches[coaches['status'].str.contains('POH', case=False, na=False)]
-            return f"There are currently {len(poh_coaches)} coaches undergoing POH (Periodic Overhaul)."
+            return f"👋 **Hello!** Based on the current workshop records, there are exactly **{len(poh_coaches)} coaches** undergoing POH (Periodic Overhaul) right now."
 
         # Intent: Employees in a specific shop
         if "employees" in question and "shop" in question:
@@ -29,29 +29,29 @@ def ai_response(question):
                     shop_emps = employees[employees['shop_name'].str.lower() == shop_name.lower()]
                     names = ", ".join(shop_emps['employee_name'].tolist()[:10])
                     count = len(shop_emps)
-                    return f"There are {count} employees working in the {shop_name}. Some of them are: {names}."
+                    return f"**Sure thing!** There are **{count} employees** currently assigned to the {shop_name}. \n\nHere are a few of them: {names}."
             
-            return f"We have {int(workshop.iloc[0]['total_employees'])} total employees across all shops."
+            return f"I couldn't find that specific shop, but we have **{int(workshop.iloc[0]['total_employees'])} total employees** working across all workshop shops."
 
         # Intent: Critical machines
         if "critical" in question and "machine" in question:
             critical_machines = machines[machines['status'].str.contains('Critical', case=False, na=False)]
             if len(critical_machines) == 0:
-                return "Good news! There are currently no machines in critical status."
+                return "🎉 **Good news!** I just checked the database and there are currently *no machines* in critical status."
             
             names = ", ".join(critical_machines['machine_name'].tolist())
-            return f"There are {len(critical_machines)} critical machines requiring immediate attention: {names}."
+            return f"⚠️ **Attention needed:** I found **{len(critical_machines)} critical machines** requiring immediate repair. \n\nThese machines are: {names}."
             
         # Intent: How many coaches
         if "how many coaches" in question or "total coaches" in question:
-            return f"There are a total of {len(coaches)} coaches currently registered in the workshop database."
+            return f"🚂 **Let's see...** There are a total of **{len(coaches)} coaches** currently registered in the workshop database!"
 
         # Fallback / Generic search
         if "maintenance" in question:
             pending = maintenance[maintenance['status'] == 'Pending']
-            return f"There are {len(pending)} pending maintenance tasks currently logged in the system."
+            return f"🔧 We currently have **{len(pending)} pending maintenance tasks** logged in the system. \n\nLet me know if you need to look at specific machines!"
 
-        return "I am the Rail Sathi Custom AI. I have analyzed the workshop database, but I need a more specific question about coaches, employees, machines, or maintenance to give you an exact answer."
+        return "🤖 **Hello! I am the Rail Sathi Custom AI.** \n\nI have successfully connected to the workshop database, but I need you to be slightly more specific. Try asking me about **coaches in POH**, **employees in a shop**, or **critical machines**!"
 
     except Exception as error:
         return f"❌ Custom AI Engine Error: {error}"
