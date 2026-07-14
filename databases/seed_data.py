@@ -104,39 +104,29 @@ def seed_database():
         shops
     )
 
-    #dump some fake employees
-    employees = [
-        ("EMP001", "Rajesh Sharma", "Supervisor", "Machine Shop", "Production", "+91-9000000001", "rajesh.sharma@nfrrailways.in", "2023-04-15", "Active"),
-        ("EMP002", "Anita Das", "Technician", "Wheel Shop", "Mechanical", "+91-9000000002", "anita.das@nfrrailways.in", "2022-09-01", "Active"),
-        ("EMP003", "Mohan Roy", "Engineer", "Welding Shop", "Engineering", "+91-9000000003", "mohan.roy@nfrrailways.in", "2021-07-21", "Active"),
-        ("EMP004", "Suman Hazarika", "Technician", "Paint Shop", "Maintenance", "+91-9000000004", "suman.hazarika@nfrrailways.in", "2020-11-10", "On Leave"),
-        ("EMP005", "Priya Kalita", "Staff", "Inspection Section", "Inspection", "+91-9000000005", "priya.kalita@nfrrailways.in", "2024-01-08", "Active"),
-        ("EMP006", "Bikash Gogoi", "Engineer", "Bogie Shop", "Engineering", "+91-9000000006", "bikash.gogoi@nfrrailways.in", "2019-06-15", "Active"),
-        ("EMP007", "Dipali Bora", "Staff", "Electrical Shop", "Electrical", "+91-9000000007", "dipali.bora@nfrrailways.in", "2022-03-20", "Active"),
-        ("EMP008", "Rana Dutta", "Supervisor", "Fitting Shop", "Production", "+91-9000000008", "rana.dutta@nfrrailways.in", "2018-08-05", "Active"),
-        ("EMP009", "Jyoti Ahmed", "Technician", "Brake Shop", "Mechanical", "+91-9000000009", "jyoti.ahmed@nfrrailways.in", "2023-11-12", "Active"),
-        ("EMP010", "Kamal Nath", "Engineer", "Corrosion Shop", "Engineering", "+91-9000000010", "kamal.nath@nfrrailways.in", "2020-04-18", "Active"),
-        ("EMP011", "Nilima Saikia", "Staff", "Air Conditioning Shop", "Maintenance", "+91-9000000011", "nilima.saikia@nfrrailways.in", "2021-09-22", "Active"),
-        ("EMP012", "Tapan Paul", "Technician", "Battery Section", "Electrical", "+91-9000000012", "tapan.paul@nfrrailways.in", "2022-07-30", "Active"),
-        ("EMP013", "Rituraj Borah", "Engineer", "Store Section", "Logistics", "+91-9000000013", "rituraj.borah@nfrrailways.in", "2019-02-14", "Active"),
-        ("EMP014", "Samir Kumar", "Supervisor", "Coach Assembly", "Production", "+91-9000000014", "samir.kumar@nfrrailways.in", "2017-10-01", "Active"),
-        ("EMP015", "Puja Singh", "Staff", "Testing Section", "Quality", "+91-9000000015", "puja.singh@nfrrailways.in", "2024-02-15", "Active"),
-        ("EMP016", "Amit Baruah", "Technician", "Machine Shop", "Production", "+91-9000000016", "amit.baruah@nfrrailways.in", "2023-06-10", "Active"),
-        ("EMP017", "Rimpi Devi", "Staff", "Wheel Shop", "Mechanical", "+91-9000000017", "rimpi.devi@nfrrailways.in", "2022-12-05", "On Leave"),
-        ("EMP018", "Hiren Sarma", "Engineer", "Welding Shop", "Engineering", "+91-9000000018", "hiren.sarma@nfrrailways.in", "2020-08-25", "Active"),
-        ("EMP019", "Bhaskar Talukdar", "Supervisor", "ISO Cell", "Quality", "+91-9000000019", "bhaskar.talukdar@nfrrailways.in", "2016-05-12", "Active"),
-        ("EMP020", "Sangita Phukan", "Technician", "Inspection Section", "Inspection", "+91-9000000020", "sangita.phukan@nfrrailways.in", "2021-11-18", "Active"),
-        ("EMP021", "Manish Tiwari", "Engineer", "Machine Shop", "Engineering", "+91-9000000021", "manish.tiwari@nfrrailways.in", "2020-03-10", "Active"),
-        ("EMP022", "Kavita Reddy", "Technician", "Bogie Shop", "Mechanical", "+91-9000000022", "kavita.reddy@nfrrailways.in", "2018-07-22", "Active"),
-        ("EMP023", "Prakash Jain", "Supervisor", "Electrical Shop", "Electrical", "+91-9000000023", "prakash.jain@nfrrailways.in", "2015-01-14", "Active"),
-        ("EMP024", "Ravi Verma", "Technician", "Air Conditioning Shop", "Maintenance", "+91-9000000024", "ravi.verma@nfrrailways.in", "2021-06-05", "Active"),
-        ("EMP025", "Sita Devi", "Staff", "Paint Shop", "Production", "+91-9000000025", "sita.devi@nfrrailways.in", "2019-11-30", "Active"),
-        ("EMP026", "Vikram Singh", "Engineer", "Brake Shop", "Mechanical", "+91-9000000026", "vikram.singh@nfrrailways.in", "2017-09-18", "Active"),
-        ("EMP027", "Alia Khan", "Technician", "Testing Section", "Quality", "+91-9000000027", "alia.khan@nfrrailways.in", "2023-04-12", "Active"),
-        ("EMP028", "Sunil Chettri", "Supervisor", "Coach Assembly", "Production", "+91-9000000028", "sunil.chettri@nfrrailways.in", "2016-08-25", "Active"),
-        ("EMP029", "Pooja Sharma", "Staff", "Store Section", "Logistics", "+91-9000000029", "pooja.sharma@nfrrailways.in", "2022-01-10", "On Leave"),
-        ("EMP030", "Anil Kapoor", "Technician", "Fitting Shop", "Production", "+91-9000000030", "anil.kapoor@nfrrailways.in", "2020-12-01", "Active"),
-    ]
+    import random
+    
+    first_names = ["Raj", "Rahul", "Amit", "Priya", "Sunil", "Vikram", "Sita", "Kavita", "Mohan", "Ravi", "Anil", "Puja", "Bikash", "Dipali", "Samir", "Jyoti", "Kamal", "Rituraj"]
+    last_names = ["Sharma", "Verma", "Roy", "Das", "Gogoi", "Bora", "Kalita", "Nath", "Devi", "Singh", "Jain", "Paul", "Sarma", "Khan", "Kapoor", "Chettri"]
+    shops_list = ["Wheel Shop", "Welding Shop", "Paint Shop", "Inspection Section", "Bogie Shop", "Electrical Shop", "Fitting Shop", "Brake Shop", "Corrosion Shop", "Air Conditioning Shop", "Battery Section", "Store Section", "Coach Assembly", "Testing Section", "Machine Shop", "ISO Cell"]
+    departments = ["Mechanical", "Engineering", "Maintenance", "Inspection", "Electrical", "Production", "Logistics", "Quality"]
+    designations = ["Technician", "Engineer", "Staff", "Supervisor", "Inspector"]
+
+    employees = []
+    
+    # 1115 fake employees
+    for i in range(1115):
+        emp_id = f"EMP{(i+1):03d}"
+        name = f"{random.choice(first_names)} {random.choice(last_names)}"
+        desig = random.choice(designations)
+        shop = random.choice(shops_list)
+        dept = random.choice(departments)
+        phone = f"+91-9{random.randint(100000000, 999999999)}"
+        email = f"{name.lower().replace(' ', '.')}@nfrrailways.in"
+        join_date = f"{random.randint(2010, 2024)}-{random.randint(1,12):02d}-{random.randint(1,28):02d}"
+        status = random.choices(["Active", "On Leave"], weights=[0.92, 0.08])[0]
+        
+        employees.append((emp_id, name, desig, shop, dept, phone, email, join_date, status))
 
     db.execute_many(
         """
