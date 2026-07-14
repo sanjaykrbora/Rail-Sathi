@@ -118,13 +118,13 @@ def app():
                     from utils.ai_helper import ai_response
                     response = ai_response(query)
                 except Exception as e:
-                    response = f"⚠️ Could not connect to AI service. Ensure GEMINI_API_KEY is set. Error: {e}"
+                    response = f"⚠️ Could not connect to AI service. Ensure AI keys are configured. Error: {e}"
                 
             st.markdown(response)
         
         st.session_state.chat_history.append(("Rail Sathi AI", response))
 
     st.divider()
-    st.caption("Rail Sathi AI • Powered by Gemini 3.5 Flash")
+    st.caption("Rail Sathi AI • Proprietary Custom AI Model")
 
     connection.close()

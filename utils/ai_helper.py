@@ -75,7 +75,7 @@ def ai_response(question):
     try:
 
         if not GEMINI_API_KEY:
-            return "Gemini API key is missing. Set GEMINI_API_KEY in your environment."
+            return "AI Service API key is missing. Ensure the system is configured correctly."
 
         context = get_database_context()
 
@@ -104,7 +104,7 @@ Please check
 
 • Internet Connection
 
-• Gemini API Key
+• AI Service Configuration
 
 • Database
 """
