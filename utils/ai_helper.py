@@ -107,17 +107,22 @@ def extract_shop_name(question, shops_df):
 def generate_next_employee_id():
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT employee_id FROM employees ORDER BY employee_id DESC LIMIT 1")
-    result = cursor.fetchone()
+    cursor.execute("SELECT employee_id FROM employees")
+    results = cursor.fetchall()
     conn.close()
     
-    if result and result[0].startswith("EMP"):
-        try:
-            current_num = int(result[0][3:])
-            return f"EMP{current_num + 1:03d}"
-        except ValueError:
-            pass
-    return "EMP001"
+    max_num = 0
+    for row in results:
+        emp_id = row[0]
+        if emp_id and emp_id.startswith("EMP"):
+            try:
+                num = int(emp_id[3:])
+                if num > max_num:
+                    max_num = num
+            except ValueError:
+                pass
+                
+    return f"EMP{max_num + 1:03d}"
 
 def ai_response(question):
     try:
