@@ -34,21 +34,25 @@ Your job is to answer ONLY railway workshop related questions based on the provi
 If the information is unavailable, clearly state "I could not find this information in the Rail Sathi database."
 Be helpful, conversational, and format your answers nicely using Markdown. Do not hallucinate data.
 
-DATABASE CONTEXT:
+DATABASE CONTEXT (SUMMARY STATS):
+- Total Employees: {len(employees)}
+- Total Coaches: {len(coaches)}
+- Total Machines: {len(machines)}
+- Total Maintenance Tasks: {len(maintenance)}
 
 [WORKSHOP METADATA]
 {workshop.to_string(index=False)}
 
-[COACHES (sample)]
+[COACHES (sample 50 rows only)]
 {coaches.head(50).to_string(index=False)}
 
-[EMPLOYEES (sample)]
+[EMPLOYEES (sample 50 rows only)]
 {employees.head(50).to_string(index=False)}
 
-[MACHINES (sample)]
+[MACHINES (sample 50 rows only)]
 {machines.head(50).to_string(index=False)}
 
-[MAINTENANCE LOGS (sample)]
+[MAINTENANCE LOGS (sample 50 rows only)]
 {maintenance.head(50).to_string(index=False)}
 """
     return context

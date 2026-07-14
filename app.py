@@ -286,18 +286,7 @@ with st.sidebar:
     st.divider()
 
     st.subheader("🕒 System")
-
-    st.write(
-        datetime.now().strftime(
-            "%d %B %Y"
-        )
-    )
-
-    st.write(
-        datetime.now().strftime(
-            "%I:%M %p"
-        )
-    )
+    st.write("Online")
     #standard footer stuff
 st.markdown("---")
 

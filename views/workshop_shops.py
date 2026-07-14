@@ -337,27 +337,30 @@ def app():
 
     st.subheader("🏆 Best Performing Shop")
 
-    best_shop = filtered_data.sort_values(
-        by="efficiency",
-        ascending=False
-    ).iloc[0]
+    if not filtered_data.empty:
+        best_shop = filtered_data.sort_values(
+            by="efficiency",
+            ascending=False
+        ).iloc[0]
 
-    best_col1, best_col2, best_col3 = st.columns(3)
+        best_col1, best_col2, best_col3 = st.columns(3)
 
-    best_col1.metric(
-        "Best Shop",
-        best_shop["shop_name"]
-    )
+        best_col1.metric(
+            "Best Shop",
+            best_shop["shop_name"]
+        )
 
-    best_col2.metric(
-        "Efficiency",
-        f"{best_shop['efficiency']}%"
-    )
+        best_col2.metric(
+            "Efficiency",
+            f"{best_shop['efficiency']}%"
+        )
 
-    best_col3.metric(
-        "Head of Shop",
-        best_shop["head_of_shop"]
-    )
+        best_col3.metric(
+            "Head of Shop",
+            best_shop["head_of_shop"]
+        )
+    else:
+        st.warning("No shops match the given filters.")
 
     st.divider()
 
