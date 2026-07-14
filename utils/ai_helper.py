@@ -8,8 +8,8 @@ import numpy as np
 # Define our training data (phrases mapping to specific intents)
 TRAINING_DATA = {
     "count_employees": [
-        "how many employees work here", "total staff", "employee count", 
-        "number of workers", "how many people", "total employees"
+        "how many employees are working", "how many employees work here", "total staff", "employee count", 
+        "number of workers", "how many people", "total employees", "employees working", "staff count", "worker count"
     ],
     "count_coaches": [
         "how many coaches", "total coaches", "number of coaches", 
@@ -17,15 +17,15 @@ TRAINING_DATA = {
     ],
     "poh_coaches": [
         "coaches in poh", "how many coaches are undergoing poh", 
-        "periodic overhaul count", "coaches under poh"
+        "periodic overhaul count", "coaches under poh", "poh coaches"
     ],
     "critical_machines": [
         "critical machines", "machines in critical status", 
-        "broken machines", "machines needing immediate attention", "summary of critical machine status"
+        "broken machines", "machines needing immediate attention", "summary of critical machine status", "critical status"
     ],
     "shop_employees": [
         "who works in the shop", "employees in the wheel shop", 
-        "give me employees for a shop", "which employees work in the shop"
+        "give me employees for a shop", "which employees work in the shop", "staff in the shop"
     ],
     "pending_maintenance": [
         "pending maintenance", "maintenance tasks", 
@@ -41,8 +41,8 @@ for intent, phrases in TRAINING_DATA.items():
         X_train.append(phrase)
         y_train.append(intent)
 
-# Train the local TF-IDF Vectorizer
-vectorizer = TfidfVectorizer()
+# Train the local TF-IDF Vectorizer with stop words removed so common words don't skew the results
+vectorizer = TfidfVectorizer(stop_words='english', ngram_range=(1, 2))
 X_train_vectorized = vectorizer.fit_transform(X_train)
 
 def predict_intent(question):
