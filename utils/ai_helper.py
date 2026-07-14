@@ -7,6 +7,18 @@ import numpy as np
 
 # Define our training data (phrases mapping to specific intents)
 TRAINING_DATA = {
+    "greeting": [
+        "hello", "hi", "hey", "good morning", "good afternoon", "good evening", "greetings"
+    ],
+    "help": [
+        "what can you do", "help me", "how do I use this", "what are your features", "help", "what do you do"
+    ],
+    "identity": [
+        "who are you", "what is your name", "what are you", "who built you", "tell me about yourself"
+    ],
+    "workshop_info": [
+        "where is this workshop", "tell me about the workshop", "workshop details", "railway workshop location", "what workshop is this"
+    ],
     "count_employees": [
         "how many employees are working", "how many employees work here", "total staff", "employee count", 
         "number of workers", "how many people", "total employees", "employees working", "staff count", "worker count"
@@ -14,6 +26,12 @@ TRAINING_DATA = {
     "count_coaches": [
         "how many coaches", "total coaches", "number of coaches", 
         "coach count", "how many trains"
+    ],
+    "count_machines": [
+        "how many machines", "total machines", "number of machines", "machine count"
+    ],
+    "count_shops": [
+        "how many shops", "number of shops", "total workshops", "shop count"
     ],
     "poh_coaches": [
         "coaches in poh", "how many coaches are undergoing poh", 
@@ -80,7 +98,28 @@ def ai_response(question):
         # Predict the intent using our local ML model
         intent = predict_intent(question)
         
-        if intent == "count_employees":
+        if intent == "greeting":
+            return "👋 **Hello there!** I am the Rail Sathi AI Assistant. How can I help you with the workshop today?"
+            
+        elif intent == "identity":
+            return "🤖 **I am Rail Sathi AI**, a custom Machine Learning model built exclusively for the N.F. Railway Mechanical Workshop, Dibrugarh. I don't rely on Gemini or external APIs—I run completely locally!"
+            
+        elif intent == "help":
+            return "**I can help you with many basic tasks!** Try asking me things like:\n- *How many employees are working?*\n- *How many critical machines are there?*\n- *Which employees work in the Wheel Shop?*\n- *Tell me about the workshop.*"
+            
+        elif intent == "workshop_info":
+            name = workshop['workshop_name'].iloc[0] if not workshop.empty else "N.F. Railway Mechanical Workshop"
+            location = workshop['location'].iloc[0] if not workshop.empty else "Dibrugarh"
+            established = workshop['established_year'].iloc[0] if not workshop.empty else "N/A"
+            return f"🏭 **Workshop Details:** This is the **{name}** located in **{location}**. It was established in {established}."
+        
+        elif intent == "count_shops":
+            return f"🏭 We have exactly **{len(shops)} distinct shops** operating within the workshop."
+            
+        elif intent == "count_machines":
+            return f"⚙️ There are **{len(machines)} machines** registered and monitored in our database."
+
+        elif intent == "count_employees":
             return f"👨‍🔧 There are exactly **{len(employees)} employees** currently working in the workshop."
             
         elif intent == "count_coaches":
@@ -112,7 +151,7 @@ def ai_response(question):
             return f"🔧 We currently have **{len(pending)} pending maintenance tasks** logged in the system."
             
         else:
-            return "🤖 **Hello! I am the Rail Sathi Custom Local AI.** \n\nI have successfully analyzed your question using my local Machine Learning model, but I couldn't quite understand what you're looking for. Try asking me about **coaches**, **employees in a shop**, or **critical machines**!"
+            return "🤖 **I didn't quite catch that.** \n\nI am the Rail Sathi Custom Local AI. You can ask me basic questions like **'how many employees are working'**, **'what are your features'**, or **'who are you'**!"
 
     except Exception as error:
         return f"❌ Custom AI Engine Error: {error}"
