@@ -55,7 +55,7 @@ TRAINING_DATA = {
         "how many shops", "number of shops", "total workshops", "shop count"
     ],
     "list_shops": [
-        "show shops", "list shops", "display shops", "view shops", "shop list", "what shops are there"
+        "show shops", "list shops", "display shops", "view shops", "shop list", "what shops are there", "name of all the shops", "names of the shops", "all shop names"
     ],
     "pending_maintenance": [
         "pending maintenance", "maintenance tasks", 
