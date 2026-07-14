@@ -13,4 +13,4 @@ streamlit-extras
 python-dotenv
 requests
 bcrypt
-google-generativeai
+scikit-learn
