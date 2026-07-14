@@ -149,13 +149,15 @@ def ai_response(question):
             return f"👨‍🔧 There are exactly **{len(employees)} employees** currently working in the workshop."
             
         elif intent == "list_employees":
-            names = ", ".join(employees['employee_name'].tolist()[:15])
+            emp_list = [f"{row['employee_name']} ({row['employee_id']})" for _, row in employees.head(15).iterrows()]
+            names = ", ".join(emp_list)
             return f"👨‍🔧 **Here is a sample of {min(15, len(employees))} employees working here:**\n{names}...\n\n(There are {len(employees)} total employees)"
             
         elif intent == "shop_employees":
             shop_name = extract_shop_name(question, shops)
             shop_emps = employees[employees['shop_name'].str.lower() == shop_name.lower()]
-            names = ", ".join(shop_emps['employee_name'].tolist()[:15])
+            emp_list = [f"{row['employee_name']} ({row['employee_id']})" for _, row in shop_emps.head(15).iterrows()]
+            names = ", ".join(emp_list)
             count = len(shop_emps)
             return f"**Sure thing!** There are **{count} employees** currently assigned to the {shop_name}. \n\nHere are some of them: {names}."
                 
