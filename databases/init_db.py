@@ -34,7 +34,10 @@ def create_tables():
             employee_name TEXT,
             designation TEXT,
             shop_name TEXT,
+            department TEXT,
             phone TEXT,
+            email TEXT,
+            joining_date TEXT,
             status TEXT
         )
         """,

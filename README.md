@@ -1,51 +1,55 @@
-═══════════════════════════════════════════════════════
+﻿# Rail Sathi
 
-  🚆 RAIL SATHI
+Smart Railway Workshop Management System for N.F. Railway Mechanical Workshop, Dibrugarh.
 
-  Smart Railway Workshop Management System
+## Tech Stack
 
-  N.F. Railway Mechanical Workshop, Dibrugarh
+- Python 3.11+
+- Streamlit
+- SQLite
+- Pandas and Plotly
 
-═══════════════════════════════════════════════════════
+## Project Structure
 
-![Python](https://img.shields.io/badge/Python-3.11-blue)
+- app.py
+- configuration.py
+- requirement.txt
+- css/style.css
+- assets/
+- databases/
+  - database.py
+  - init_db.py
+  - seed_data.py
+- pages/
+- utils/
+  - authentication/
 
-![Streamlit](https://img.shields.io/badge/Streamlit-Framework-red)
+## Setup
 
-![SQLite](https://img.shields.io/badge/Database-SQLite-green)
+1. Create and activate a virtual environment.
+2. Install dependencies:
 
-![Version](https://img.shields.io/badge/Version-1.0-orange)
+```bash
+pip install -r requirement.txt
+```
 
-![License](https://img.shields.io/badge/License-MIT-blue)
+3. Initialize the database:
 
+```bash
+python databases/init_db.py
+python databases/seed_data.py
+```
 
+4. Run the app:
 
-🚆 GitHub Repository Structure
-Rail_Sathi/
-│
-├── .github/
-│   └── ISSUE_TEMPLATE.md
-│
-├── assets/
-│   ├── banner.png
-│   ├── logo.png
-│   ├── dashboard.png
-│   ├── login.png
-│   ├── analytics.png
-│   └── coach_tracking.png
-│
-├── authentication/
-├── css/
-├── database/
-├── pages/
-├── reports/
-├── utils/
-│
-├── app.py
-├── config.py
-├── requirements.txt
-├── README.md
-├── LICENSE
-├── .gitignore
-└── CONTRIBUTING.md
+```bash
+streamlit run app.py
+```
 
+## Environment Variables
+
+Set the following environment variables when using AI features:
+
+- GEMINI_API_KEY
+
+You can store them in a .env file in the project root.

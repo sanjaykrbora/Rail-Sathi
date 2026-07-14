@@ -1,15 +1,52 @@
 import hashlib
 
+import bcrypt
 import streamlit as st
 
-from utils.database_helper import fetch_query
+from utils.database_helper import execute_query, fetch_query
 
 
 def hash_password(password):
+    return bcrypt.hashpw(
+        password.encode("utf-8"),
+        bcrypt.gensalt()
+    ).decode("utf-8")
 
-    return hashlib.sha256(
-        password.encode()
+
+def _verify_password(password, stored_password):
+
+    if not stored_password:
+        return False
+
+    #bcrypt headers look like this
+    if stored_password.startswith("$2"):
+        try:
+            return bcrypt.checkpw(
+                password.encode("utf-8"),
+                stored_password.encode("utf-8")
+            )
+        except ValueError:
+            return False
+
+    legacy_hash = hashlib.sha256(
+        password.encode("utf-8")
     ).hexdigest()
+
+    return stored_password == legacy_hash
+
+
+def _maybe_upgrade_password(username, password, stored_password):
+
+    if stored_password and not stored_password.startswith("$2"):
+        new_hash = hash_password(password)
+        execute_query(
+            """
+            UPDATE users
+            SET password=?
+            WHERE username=?
+            """,
+            (new_hash, username)
+        )
 
 
 def authenticate(username, password):
@@ -29,9 +66,15 @@ def authenticate(username, password):
 
     user = user.iloc[0]
 
-    if user["password"] != hash_password(password):
+    if not _verify_password(password, user["password"]):
 
         return False
+
+    _maybe_upgrade_password(
+        username=user["username"],
+        password=password,
+        stored_password=user["password"]
+    )
 
     st.session_state.logged_in = True
     st.session_state.username = user["username"]

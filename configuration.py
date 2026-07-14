@@ -1,4 +1,4 @@
-from pathlib import Path
+﻿from pathlib import Path
 
 APP_NAME = "Rail Sathi"
 APP_VERSION = "1.0.0"
@@ -14,7 +14,7 @@ MONTHLY_POH_TARGET = 68
 MONTHLY_IOH_TARGET = 55
 
 BASE_DIR = Path(__file__).resolve().parent
-DATABASE_PATH = BASE_DIR / "database" / "railway.db"
+DATABASE_PATH = BASE_DIR / "databases" / "railway.db"
 
 DEFAULT_WORKSHOP_EFFICIENCY = 94
 DEFAULT_PENDING_COACHES = 12
@@ -27,12 +27,10 @@ DANGER_COLOR = "#D32F2F"
 BACKGROUND_COLOR = "#F5F7FA"
 
 USER_ROLES = [
-    "Administrator",
-    "Workshop Manager",
+    "Admin",
+    "Manager",
     "Supervisor",
-    "Engineer",
-    "Technician",
-    "Intern"
+    "Staff"
 ]
 
 COACH_STATUS = [

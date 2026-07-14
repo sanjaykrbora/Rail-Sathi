@@ -5,9 +5,26 @@ import pandas as pd
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DB_PATH = BASE_DIR / "databases"/ "railway.db"
-print(DB_PATH)
-print(DB_PATH.exists())
+DB_PATH = BASE_DIR / "databases" / "railway.db"
+
+ALLOWED_TABLES = {
+    "workshop_info",
+    "users",
+    "employees",
+    "shops",
+    "coaches",
+    "machines",
+    "maintenance",
+    "inspections",
+    "notifications",
+    "reports"
+}
+
+
+def _validate_table_name(table_name):
+
+    if table_name not in ALLOWED_TABLES:
+        raise ValueError(f"Unsupported table name: {table_name}")
 
 def get_connection():
 
@@ -22,6 +39,8 @@ def close_connection(connection):
 
 
 def fetch_table(table_name):
+
+    _validate_table_name(table_name)
 
     connection = get_connection()
 
@@ -68,6 +87,8 @@ def fetch_query(query, parameters=()):
 
 def insert_record(table_name, data):
 
+    _validate_table_name(table_name)
+
     columns = ", ".join(data.keys())
 
     placeholders = ", ".join(
@@ -93,6 +114,8 @@ def update_record(
     where_clause,
     where_values
 ):
+
+    _validate_table_name(table_name)
 
     fields = ", ".join(
         [
@@ -123,6 +146,8 @@ def delete_record(
     where_values
 ):
 
+    _validate_table_name(table_name)
+
     query = f"""
     DELETE FROM {table_name}
     WHERE {where_clause}
@@ -135,6 +160,8 @@ def delete_record(
 
 
 def count_records(table_name):
+
+    _validate_table_name(table_name)
 
     connection = get_connection()
 

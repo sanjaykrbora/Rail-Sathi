@@ -4,7 +4,7 @@ from pathlib import Path
 from utils.authentication.auth import require_login, sidebar_user
 from utils.authentication.roles import has_permission
 
-from pages import (
+from views import (
     dashboard,
     analytics,
     coach_tracking,
@@ -47,7 +47,6 @@ def load_css():
                 unsafe_allow_html=True
             )
 
-
 load_css()
 
 
@@ -61,7 +60,6 @@ if not st.session_state.logged_in:
     login.app()
 
     st.stop()
-
 
 require_login()
 logo_path = BASE_DIR / "assets" / "logo.png"
@@ -150,10 +148,7 @@ with st.sidebar:
     st.caption(
         f"Role : {st.session_state.role}"
     )
-    # ============================
-# Page Routing
-# ============================
-
+    #hook up the pages
 try:
 
     page_key = available_pages[selected_page]
@@ -207,10 +202,7 @@ except Exception as error:
     with st.expander("View Error Details"):
 
         st.code(str(error))
-        # ============================
-# Global Notification Panel
-# ============================
-
+        #show alerts on top
 from datetime import datetime
 
 from utils.notification_helper import (
@@ -306,10 +298,7 @@ with st.sidebar:
             "%I:%M %p"
         )
     )
-    # ============================
-# Footer
-# ============================
-
+    #standard footer stuff
 st.markdown("---")
 
 footer_col1, footer_col2, footer_col3 = st.columns(3)
@@ -333,16 +322,14 @@ with footer_col3:
     )
 
 st.caption(
-    "© 2026 Rail Sathi | Developed by Shobhraj Bhattacharjee"
+    "© 2026 Rail Sathi | Developed by Shobhraj Bhattacharjee & Sanjay Krishna Bora"
 )
 
-# ============================
-# Logout Button
-# ============================
-
+#make logout work
 if st.sidebar.button(
     "🚪 Logout",
-    use_container_width=True
+    use_container_width=True,
+    key="sidebar_logout_btn"
 ):
 
     keys = [

@@ -5,13 +5,16 @@ from dotenv import load_dotenv
 
 from utils.database_helper import fetch_table
 
-load_dotenv()
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(dotenv_path=BASE_DIR.parent / ".env", override=True)
 
-genai.configure(
-    api_key=os.getenv("AQ.Ab8RN6IdGDhwrlXllY6ExHorqVH9GofI_8v5tjn7hofmfBO7tQ")
-)
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY").strip() if os.getenv("GEMINI_API_KEY") else None
 
-model = genai.GenerativeModel("gemini-2.5-flash")
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
+
+model = genai.GenerativeModel("gemini-3.5-flash")
 
 
 def get_database_context():
@@ -70,6 +73,9 @@ say
 def ai_response(question):
 
     try:
+
+        if not GEMINI_API_KEY:
+            return "Gemini API key is missing. Set GEMINI_API_KEY in your environment."
 
         context = get_database_context()
 
