@@ -11,10 +11,10 @@ TRAINING_DATA = {
         "hello", "hi", "hey", "good morning", "good afternoon", "good evening", "greetings"
     ],
     "help": [
-        "what can you do", "help me", "how do I use this", "what are your features", "help", "what do you do"
+        "what can you do", "help me", "how do I use this", "what are your features", "help", "what do you do", "tasks"
     ],
     "identity": [
-        "who are you", "what is your name", "what are you", "who built you", "tell me about yourself"
+        "who are you", "what is your name", "what are you", "who built you", "tell me about yourself", "are you ai"
     ],
     "workshop_info": [
         "where is this workshop", "tell me about the workshop", "workshop details", "railway workshop location", "what workshop is this"
@@ -23,31 +23,43 @@ TRAINING_DATA = {
         "how many employees are working", "how many employees work here", "total staff", "employee count", 
         "number of workers", "how many people", "total employees", "employees working", "staff count", "worker count"
     ],
-    "count_coaches": [
-        "how many coaches", "total coaches", "number of coaches", 
-        "coach count", "how many trains"
-    ],
-    "count_machines": [
-        "how many machines", "total machines", "number of machines", "machine count"
-    ],
-    "count_shops": [
-        "how many shops", "number of shops", "total workshops", "shop count"
-    ],
-    "poh_coaches": [
-        "coaches in poh", "how many coaches are undergoing poh", 
-        "periodic overhaul count", "coaches under poh", "poh coaches"
-    ],
-    "critical_machines": [
-        "critical machines", "machines in critical status", 
-        "broken machines", "machines needing immediate attention", "summary of critical machine status", "critical status"
+    "list_employees": [
+        "show employees", "list employees", "who works here", "display staff", "employee list", "give me the employees", "view employees"
     ],
     "shop_employees": [
         "who works in the shop", "employees in the wheel shop", 
         "give me employees for a shop", "which employees work in the shop", "staff in the shop"
     ],
+    "count_coaches": [
+        "how many coaches", "total coaches", "number of coaches", 
+        "coach count", "how many trains"
+    ],
+    "list_coaches": [
+        "show coaches", "list coaches", "display coaches", "view coaches", "coach list"
+    ],
+    "poh_coaches": [
+        "coaches in poh", "how many coaches are undergoing poh", 
+        "periodic overhaul count", "coaches under poh", "poh coaches", "show poh"
+    ],
+    "count_machines": [
+        "how many machines", "total machines", "number of machines", "machine count"
+    ],
+    "list_machines": [
+        "show machines", "list machines", "display machines", "view machines", "machine list"
+    ],
+    "critical_machines": [
+        "critical machines", "machines in critical status", 
+        "broken machines", "machines needing immediate attention", "summary of critical machine status", "critical status", "show critical"
+    ],
+    "count_shops": [
+        "how many shops", "number of shops", "total workshops", "shop count"
+    ],
+    "list_shops": [
+        "show shops", "list shops", "display shops", "view shops", "shop list", "what shops are there"
+    ],
     "pending_maintenance": [
         "pending maintenance", "maintenance tasks", 
-        "maintenance logged", "pending repairs", "how many pending maintenance tasks are there"
+        "maintenance logged", "pending repairs", "how many pending maintenance tasks are there", "show maintenance"
     ]
 }
 
@@ -75,7 +87,7 @@ def predict_intent(question):
     best_score = similarities[best_match_idx]
     
     # If the confidence is too low, return a fallback intent
-    if best_score < 0.2:
+    if best_score < 0.15:
         return "unknown"
         
     return y_train[best_match_idx]
@@ -98,6 +110,12 @@ def ai_response(question):
         # Predict the intent using our local ML model
         intent = predict_intent(question)
         
+        # Smart routing: if they asked for shop employees but didn't specify a shop, route to list_employees
+        if intent == "shop_employees":
+            shop_name = extract_shop_name(question, shops)
+            if not shop_name:
+                intent = "list_employees"
+        
         if intent == "greeting":
             return "👋 **Hello there!** I am the Rail Sathi AI Assistant. How can I help you with the workshop today?"
             
@@ -105,7 +123,7 @@ def ai_response(question):
             return "🤖 **I am Rail Sathi AI**, a custom Machine Learning model built exclusively for the N.F. Railway Mechanical Workshop, Dibrugarh. I don't rely on Gemini or external APIs—I run completely locally!"
             
         elif intent == "help":
-            return "**I can help you with many basic tasks!** Try asking me things like:\n- *How many employees are working?*\n- *How many critical machines are there?*\n- *Which employees work in the Wheel Shop?*\n- *Tell me about the workshop.*"
+            return "**I can help you with many basic tasks!** Try asking me things like:\n- *How many employees are working?*\n- *Show employees*\n- *List shops*\n- *Critical machines*\n- *Pending maintenance*"
             
         elif intent == "workshop_info":
             name = workshop['workshop_name'].iloc[0] if not workshop.empty else "N.F. Railway Mechanical Workshop"
@@ -116,14 +134,37 @@ def ai_response(question):
         elif intent == "count_shops":
             return f"🏭 We have exactly **{len(shops)} distinct shops** operating within the workshop."
             
+        elif intent == "list_shops":
+            shop_list = ", ".join(shops['shop_name'].tolist())
+            return f"🏭 **Here are all our shops:**\n{shop_list}"
+            
         elif intent == "count_machines":
             return f"⚙️ There are **{len(machines)} machines** registered and monitored in our database."
+
+        elif intent == "list_machines":
+            names = ", ".join(machines['machine_name'].tolist()[:15])
+            return f"⚙️ **Here is a sample of {min(15, len(machines))} machines in the database:**\n{names}...\n\n(There are {len(machines)} in total)"
 
         elif intent == "count_employees":
             return f"👨‍🔧 There are exactly **{len(employees)} employees** currently working in the workshop."
             
+        elif intent == "list_employees":
+            names = ", ".join(employees['employee_name'].tolist()[:15])
+            return f"👨‍🔧 **Here is a sample of {min(15, len(employees))} employees working here:**\n{names}...\n\n(There are {len(employees)} total employees)"
+            
+        elif intent == "shop_employees":
+            shop_name = extract_shop_name(question, shops)
+            shop_emps = employees[employees['shop_name'].str.lower() == shop_name.lower()]
+            names = ", ".join(shop_emps['employee_name'].tolist()[:15])
+            count = len(shop_emps)
+            return f"**Sure thing!** There are **{count} employees** currently assigned to the {shop_name}. \n\nHere are some of them: {names}."
+                
         elif intent == "count_coaches":
             return f"🚂 We have a total of **{len(coaches)} coaches** registered in the database."
+            
+        elif intent == "list_coaches":
+            ids = ", ".join(coaches['coach_id'].astype(str).tolist()[:15])
+            return f"🚂 **Here is a sample of {min(15, len(coaches))} coaches:**\n{ids}...\n\n(There are {len(coaches)} total coaches)"
             
         elif intent == "poh_coaches":
             poh_coaches = coaches[coaches['status'].str.contains('POH', case=False, na=False)]
@@ -135,23 +176,13 @@ def ai_response(question):
                 return "🎉 **Good news!** I just checked the database and there are currently *no machines* in critical status."
             names = ", ".join(critical_machines['machine_name'].tolist())
             return f"⚠️ **Attention needed:** I found **{len(critical_machines)} critical machines** requiring immediate repair. \n\nThese machines are: {names}."
-            
-        elif intent == "shop_employees":
-            shop_name = extract_shop_name(question, shops)
-            if shop_name:
-                shop_emps = employees[employees['shop_name'].str.lower() == shop_name.lower()]
-                names = ", ".join(shop_emps['employee_name'].tolist()[:10])
-                count = len(shop_emps)
-                return f"**Sure thing!** There are **{count} employees** currently assigned to the {shop_name}. \n\nHere are a few of them: {names}."
-            else:
-                return "I couldn't identify a specific shop in your question, but try asking something like *'Which employees work in the Wheel Shop?'*"
                 
         elif intent == "pending_maintenance":
             pending = maintenance[maintenance['status'] == 'Pending']
             return f"🔧 We currently have **{len(pending)} pending maintenance tasks** logged in the system."
             
         else:
-            return "🤖 **I didn't quite catch that.** \n\nI am the Rail Sathi Custom Local AI. You can ask me basic questions like **'how many employees are working'**, **'what are your features'**, or **'who are you'**!"
+            return "🤖 **I didn't quite catch that.** \n\nI am the Rail Sathi Custom Local AI. You can ask me basic questions like **'show employees'**, **'what are your features'**, or **'critical machines'**!"
 
     except Exception as error:
         return f"❌ Custom AI Engine Error: {error}"
