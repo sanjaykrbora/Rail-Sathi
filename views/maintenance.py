@@ -118,14 +118,13 @@ def app():
                     else:
                         try:
                             from utils.database_helper import execute_query
-                            import uuid
-                            record_id = str(uuid.uuid4())[:8]
+                            machine_name = "Unknown"
                             execute_query(
                                 """
-                                INSERT INTO maintenance (record_id, machine_id, maintenance_type, maintenance_date, technician_name, status, notes)
-                                VALUES (?, ?, ?, ?, ?, ?, ?)
+                                INSERT INTO maintenance (machine_id, machine_name, maintenance_type, maintenance_date, technician, remarks)
+                                VALUES (?, ?, ?, ?, ?, ?)
                                 """,
-                                (record_id, new_mach_id, new_type, str(new_date), new_tech, new_status, new_notes)
+                                (new_mach_id, machine_name, new_type, str(new_date), new_tech, new_notes)
                             )
                             st.success("Maintenance record added successfully!")
                             st.rerun()

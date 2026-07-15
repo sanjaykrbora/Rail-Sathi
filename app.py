@@ -313,30 +313,4 @@ with footer_col3:
 st.caption(
     "© 2026 Rail Sathi | Developed by Shobhraj Bhattacharjee & Sanjay Krishna Bora"
 )
-
-#make logout work
-if st.sidebar.button(
-    "🚪 Logout",
-    use_container_width=True,
-    key="sidebar_logout_btn"
-):
-
-    keys = [
-        "logged_in",
-        "username",
-        "name",
-        "role",
-        "remember_me"
-    ]
-
-    for key in keys:
-
-        if key in st.session_state:
-
-            del st.session_state[key]
-
-    st.success(
-        "Logged out successfully."
-    )
-
-    st.rerun()
+
