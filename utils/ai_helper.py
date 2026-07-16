@@ -198,7 +198,7 @@ def ai_response(question):
             return f"🚂 **Here is a sample of {min(15, len(coaches))} coaches:**\n{ids}...\n\n(There are {len(coaches)} total coaches)"
             
         elif intent == "poh_coaches":
-            poh_coaches = coaches[coaches['status'].str.contains('POH', case=False, na=False)]
+            poh_coaches = coaches[coaches['overhaul_type'].str.contains('POH', case=False, na=False)]
             if len(poh_coaches) == 0:
                 return "👋 **Hello!** Based on the current workshop records, there are exactly **0 coaches** undergoing POH right now."
             coach_list = [f"{row['coach_number']} ({row['coach_type']})" for _, row in poh_coaches.head(15).iterrows()]
@@ -206,7 +206,7 @@ def ai_response(question):
             return f"👋 **Hello!** Based on the current workshop records, there are exactly **{len(poh_coaches)} coaches** undergoing POH (Periodic Overhaul) right now. \n\nSome of them are: {names}"
             
         elif intent == "critical_machines":
-            critical_machines = machines[machines['machine_status'].str.contains('Critical', case=False, na=False)]
+            critical_machines = machines[machines['health_score'] < 50]
             if len(critical_machines) == 0:
                 return "🎉 **Good news!** I just checked the database and there are currently *no machines* in critical status."
             mach_list = [f"{row['machine_name']} ({row['machine_id']})" for _, row in critical_machines.iterrows()]
