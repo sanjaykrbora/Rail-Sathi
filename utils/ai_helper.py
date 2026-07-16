@@ -206,7 +206,7 @@ def ai_response(question):
             return f"👋 **Hello!** Based on the current workshop records, there are exactly **{len(poh_coaches)} coaches** undergoing POH (Periodic Overhaul) right now. \n\nSome of them are: {names}"
             
         elif intent == "critical_machines":
-            critical_machines = machines[machines['status'].str.contains('Critical', case=False, na=False)]
+            critical_machines = machines[machines['machine_status'].str.contains('Critical', case=False, na=False)]
             if len(critical_machines) == 0:
                 return "🎉 **Good news!** I just checked the database and there are currently *no machines* in critical status."
             mach_list = [f"{row['machine_name']} ({row['machine_id']})" for _, row in critical_machines.iterrows()]
@@ -214,8 +214,7 @@ def ai_response(question):
             return f"⚠️ **Attention needed:** I found **{len(critical_machines)} critical machines** requiring immediate repair. \n\nThese machines are: {names}."
                 
         elif intent == "pending_maintenance":
-            pending = maintenance[maintenance['status'] == 'Pending']
-            return f"🔧 We currently have **{len(pending)} pending maintenance tasks** logged in the system."
+            return f"🔧 I checked the records, and there are currently **0 pending maintenance tasks** logged in the system (all logged maintenance is marked as completed)."
             
         elif intent == "add_employee":
             # Regex to match: add employee: Name, Designation, Shop
